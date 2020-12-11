@@ -10,6 +10,4 @@ _psql --set=db="$POSTGRESQL_DATABASE" \
 <<'EOF'
 CREATE DATABASE :"db";
 CREATE USER :"user" PASSWORD :'pass';
-CREATE USER admin;
-CREATE USER robot_zmon;
 EOF

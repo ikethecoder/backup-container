@@ -27,8 +27,6 @@ function onBackupDatabase(){
     _password=$(getPassword ${_databaseSpec})
     echoGreen "Backing up '${_hostname}${_port:+:${_port}}${_database:+/${_database}}' to '${_backupFile}' ..."
 
-    echo "BACKUP ${_password} ${_username} ${_database}"
-    
     PGPASSWORD=${_password} pg_dump -Fp -h "${_hostname}" ${_portArg} -U "${_username}" "${_database}" | gzip > ${_backupFile}
     return ${PIPESTATUS[0]}
   )
@@ -60,7 +58,6 @@ function onRestoreDatabase(){
     _portArg=${_port:+"-p ${_port}"}
     _username=$(getUsername ${_databaseSpec})
     _password=$(getPassword ${_databaseSpec})
-    
     echo -e "Restoring '${_fileName}' to '${_hostname}${_port:+:${_port}}${_database:+/${_database}}' ...\n" >&2
 
     export PGPASSWORD=${_adminPassword}
@@ -117,9 +114,7 @@ function onStartServer(){
 
     _databaseSpec=${1}
 
-    _username=$(getUsername ${_databaseSpec})
-    _password=$(getPassword ${_databaseSpec})
-
+    # Start a local PostgreSql instance
     POSTGRESQL_DATABASE=$(getDatabaseName ${_databaseSpec}) \
     POSTGRESQL_USER="$(getUsername ${_databaseSpec})" \
     POSTGRESQL_PASSWORD=$(getPassword ${_databaseSpec}) \
@@ -197,7 +192,6 @@ function onVerifyBackup(){
     shift $((OPTIND-1))
 
     _databaseSpec=${1}
-    echo "DBSPEC=${_databaseSpec}"
     _hostname=$(getHostname -l ${_databaseSpec})
     _database=$(getDatabaseName ${_databaseSpec})
     _port=$(getPort -l ${_databaseSpec})
