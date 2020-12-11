@@ -27,7 +27,7 @@ USER root
 # --------------------------------------------------------------------------------------------------------
 # Set permissions for OpenShift
 RUN chmod 664 /etc/passwd \
- && apt-get update && apt-get install -y gettext-base \
+ && apt-get update && apt-get install -y gettext-base bsdmainutils \
  && echo $TZ > /etc/timezone
 # ========================================================================================================
 
@@ -40,12 +40,7 @@ COPY webhook-template.json /
 
 ENV POSTGRESQL_SHARED_PRELOAD_LIBRARIES="pg_stat_statements,pg_stat_kcache,set_user"
 
-
 WORKDIR /
-
-USER root 
-
-RUN apt-get install -y bsdmainutils
 
 SHELL ["/bin/bash", "-c"]
 ENTRYPOINT ["/backup.sh"]
