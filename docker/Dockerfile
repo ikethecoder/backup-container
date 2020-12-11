@@ -1,7 +1,5 @@
 # This image provides a postgres installation from which to run backups 
-#FROM centos/postgresql-12-centos7:20200917-804ef01
-FROM registry.opensource.zalan.do/acid/spilo-12:1.6-p3
-#centos/postgresql-12-centos7:20200917-804ef01
+FROM centos/postgresql-12-centos7:20200917-804ef01
 
 # Change timezone to PST for convenience
 ENV TZ=PST8PDT
@@ -34,13 +32,11 @@ RUN chmod +x /usr/bin/go-crond
 # ========================================================================================================
 # Perform operations that require root privilages here ...
 # --------------------------------------------------------------------------------------------------------
-# Set permissions for OpenShift
-RUN chmod 664 /etc/passwd \
- && echo $TZ > /etc/timezone
+RUN echo $TZ > /etc/timezone
 # ========================================================================================================
 
 # Important - Reset to the base image's user account.
-USER postgres
+USER 26
 
-SHELL ["/bin/bash", "-c"]
-ENTRYPOINT ["/backup.sh"]
+# Set the default CMD.
+CMD sh /backup.sh
